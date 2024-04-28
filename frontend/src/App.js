@@ -14,36 +14,71 @@ import {
   ListGroup,
   ListGroupItem,
 } from "reactstrap";
-import classnames from "classnames";
+import classnames from "classnames"; // Corrected the import
 import BookModal from "./components/BookModal";
-import './App.css';
+import AddBookForm from "./components/AddBookForm"; // Correct import
+import "./App.css"; // Correct path
 
 const App = () => {
-  const [bookList, setBookList] = useState([]);
-  const [activeItem, setActiveItem] = useState({});
-  const [modal, setModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState("1");
+  const [bookList, setBookList] = useState([]); // List of books
+  const [activeItem, setActiveItem] = useState({}); // Active book
+  const [modal, setModal] = useState(false); // Modal state
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [error, setError] = useState(null); // Error handling
+  const [activeTab, setActiveTab] = useState("1"); // Active tab
+
+  const fetchBooks = async () => { // Function to fetch books
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.get("/api/BookRec/");
+      setBookList(response.data);
+    } catch (error) {
+      console.error("Error fetching books:", error);
+      setError("Error fetching books");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const response = await axios.get("/api/BookRec/");
-        setBookList(response.data);
-      } catch (error) {
-        console.error("Error fetching books:", error);
-        setError(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchBooks();
+    fetchBooks(); // Fetch books on component mount
   }, []);
+
+  const addBook = async (bookData) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post("/api/BookRec/add/", bookData);
+      console.log("Book added:", response.data.message);
+      fetchBooks(); // Refresh the book list
+    } catch (error) {
+      console.error("Error adding book:", error);
+      setError("Error adding book");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const deleteBook = async (bookTitle, bookAuthors) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.delete("/api/BookRec/delete/", {
+        data: { title: bookTitle, authors: bookAuthors },
+      });
+      console.log("Book deleted:", response.data.message);
+      fetchBooks(); // Refresh the book list after deleting
+    } catch (error) {
+      console.error("Error deleting book:", error);
+      setError("Error deleting book");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleBookClick = (book) => {
     setActiveItem(book);
@@ -110,40 +145,45 @@ const App = () => {
         </TabPane>
 
         <TabPane tabId="2">
-          <Form>
-            <FormGroup>
-              <Label for="bookTitle">Book Title</Label>
-              <Input type="text" name="bookTitle" id="bookTitle" placeholder="Enter book title" />
-            </FormGroup>
-            <FormGroup>
-              <Label for="bookAuthor">Author</Label>
-              <Input type="text" name="bookAuthor" id="bookAuthor" placeholder="Enter author" />
-            </FormGroup>
-            <Button color="primary">Add Book</Button>
-          </Form>
+        <AddBookForm onAddBook={addBook} />
         </TabPane>
-
         <TabPane tabId="3">
           <Form>
             <FormGroup>
-              <Label for="searchTerm">Search Book Title</Label>
-              <Input type="text" name="searchTerm" id="searchTerm" placeholder="Enter search book title" />
+              <Label for="filterTerm">Filter Title</Label>
+              <Input type="text" name="filterTerm" id="filterTerm" placeholder="Enter book title" />
             </FormGroup>
-            <Button color="primary">Search</Button>
-          </Form>
-        </TabPane>
-
-        <TabPane tabId="4">
-          <Form>
             <FormGroup>
-              <Label for="deleteTerm">Book Title</Label>
-              <Input type="text" name="deleteTerm" id="deleteTerm" placeholder="Enter delete book title" />
+              <Label for="filterTerm">Filter By rating</Label>
+              <Input type="text" name="filterTerm" id="filterTerm" placeholder="Enter rating" />
             </FormGroup>
-            <Button color="primary">Delete</Button>
+            <Button color="primary">Filter Books</Button>
           </Form>
         </TabPane>
-      </TabContent>
-
+      
+      <TabPane tabId="4">
+        <Form onSubmit={(e) => e.preventDefault()}>
+            <FormGroup>
+              <Label for="deleteTitle">Delete Book Title</Label>
+              <Input type="text" id="deleteTitle" placeholder="Enter book title to delete" />
+            </FormGroup>
+            <FormGroup>
+              <Label for="deleteAuthors">Delete Authors</Label>
+              <Input type="text" id="deleteAuthors" placeholder="Enter authors to delete" />
+            </FormGroup>
+            <Button
+              color="primary"
+              onClick={() => {
+                const bookTitle = document.getElementById("deleteTitle").value;
+                const bookAuthors = document.getElementById("deleteAuthors").value;
+                deleteBook(bookTitle, bookAuthors);
+              }}
+            >
+               Delete Book
+            </Button>
+          </Form>
+        </TabPane>
+        </TabContent>
       <BookModal
         isOpen={modal}
         toggle={() => setModal(false)}
