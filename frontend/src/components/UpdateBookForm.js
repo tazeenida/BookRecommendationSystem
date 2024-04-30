@@ -66,6 +66,7 @@ function UpdateBookForm({ onBookUpdated }) {
             value={bookData.book_id}
             onChange={handleChange}
             required
+            placeholder="Enter book id"
           />
         </FormGroup>
         <FormGroup>
@@ -75,6 +76,7 @@ function UpdateBookForm({ onBookUpdated }) {
             name="title"
             value={bookData.title}
             onChange={handleChange}
+            placeholder="Enter title"
           />
         </FormGroup>
         <FormGroup>
