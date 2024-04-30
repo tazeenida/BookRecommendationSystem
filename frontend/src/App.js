@@ -18,6 +18,8 @@ import classnames from "classnames"; // Corrected the import
 import BookModal from "./components/BookModal";
 import AddBookForm from "./components/AddBookForm"; // Correct import
 import DeleteBookForm from "./components/DeleteBookForm";
+import BookSearchPage from "./components/BookSearchPage";
+import UpdateBookForm from "./components/UpdateBookForm";
 import "./App.css"; // Correct path
 
 const App = () => {
@@ -44,7 +46,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetchBooks(); // Fetch books on component mount
+    fetchBooks(); 
   }, []);
 
   const handleBookClick = (book) => {
@@ -89,6 +91,14 @@ const App = () => {
             className={classnames({ active: activeTab === "4" })}
             onClick={() => toggle("4")} 
           >
+            Update Book
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink
+            className={classnames({ active: activeTab === "5" })}
+            onClick={() => toggle("5")} 
+          >
             Delete Book
           </NavLink>
         </NavItem>
@@ -115,22 +125,14 @@ const App = () => {
         <AddBookForm onBookAdded={fetchBooks} />
         </TabPane>
         <TabPane tabId="3">
-          <Form>
-            <FormGroup>
-              <Label for="filterTerm">Filter Title</Label>
-              <Input type="text" name="filterTerm" id="filterTerm" placeholder="Enter book title" />
-            </FormGroup>
-            <FormGroup>
-              <Label for="filterTerm">Filter By rating</Label>
-              <Input type="text" name="filterTerm" id="filterTerm" placeholder="Enter rating" />
-            </FormGroup>
-            <Button color="primary">Filter Books</Button>
-          </Form>
+           <BookSearchPage/>
         </TabPane>
-      
-      <TabPane tabId="4">
-      <DeleteBookForm/>
+        <TabPane tabId="4">
+        <UpdateBookForm onBookUpdated={fetchBooks} /> 
         </TabPane>
+        <TabPane tabId="5">
+          <DeleteBookForm/>
+          </TabPane>
         </TabContent>
       <BookModal
         isOpen={modal}

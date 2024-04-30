@@ -8,5 +8,5 @@ router.register(r'BookRec', views.BookRecView, 'BookRec')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),  # Use only the router
+    path('api/', include(router.urls)),
 ]
