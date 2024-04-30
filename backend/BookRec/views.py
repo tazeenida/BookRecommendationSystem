@@ -8,6 +8,7 @@ from .models import BookRec
 from django.http import JsonResponse
 from rest_framework.decorators import action
 from uuid import uuid4
+import json
 
 class BookRecView(viewsets.ViewSet):
     def list(self, request):
@@ -39,7 +40,7 @@ class BookRecView(viewsets.ViewSet):
 
         return JsonResponse({'message': 'Book added successfully'}, status=201)
 
-    @action(detail=False, methods=['delete'])  # DELETE request
+    @action(detail=False, methods=['delete'])
     def delete(self, request):
         title = request.data.get('title')
         authors = request.data.get('authors')
@@ -58,36 +59,82 @@ class BookRecView(viewsets.ViewSet):
             
         return JsonResponse({'message': 'Book deleted successfully'}, status=200)
 
-    @action(detail=False, methods=['get'])  # Filtering endpoint
+    @action(detail=False, methods=['get']) 
     def filter(self, request):
-        # Start building a dynamic SQL query with an always-true condition
         query = "SELECT * FROM bookrec_bookrec WHERE 1=1"
         params = []
 
-        # Define fields to filter
-        fields = {
-            'title': 'title',
-            'year': 'year',
-            'pages': 'pages',
-            'description': 'description',
-            'genres': 'genres',
-            'average_rating': 'average_rating',
-            'ratings_count': 'ratings_count',
-            'authors': 'authors',
-        }
+        average_rating_min = request.query_params.get("average_rating_min")
+        average_rating_max = request.query_params.get("average_rating_max")
 
-        # Add conditions to the query for each field if they have values
+        if average_rating_min:
+            query += " AND average_rating >= %s"
+            params.append(average_rating_min)
+
+        if average_rating_max:
+            query += " AND average_rating <= %s"
+            params.append(average_rating_max)
+
+        fields = {
+        'book_id': 'book_id',
+        'title': 'title',
+        'year': 'year',
+        'pages': 'pages',
+        'description': 'description',
+        'genres': 'genres',
+        'ratings_count': 'ratings_count',
+        'authors': 'authors',
+            }
+
         for field, column in fields.items():
             value = request.query_params.get(field)
             if value:
                 query += f" AND {column} LIKE %s"
                 params.append(f"%{value}%")
 
-        # Execute the dynamic query
         with connection.cursor() as cursor:
             cursor.execute(query, params)
             rows = cursor.fetchall()
 
-        result = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
+            result = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
 
         return JsonResponse(result, safe=False)
+        
+    def update(self, request, pk=None):
+        data = json.loads(request.body)
+        book_id = data.get("book_id")  
+
+        if not book_id:
+            return JsonResponse({"error": "Book ID is required for update."}, status=400)
+
+        update_fields = []
+        update_values = []
+
+        fields_to_check = {
+            "title": "title",
+            "authors": "authors",
+            "year": "year",
+            "pages": "pages",
+            "description": "description",
+            "genres": "genres",
+            "average_rating": "average_rating",
+            "ratings_count": "ratings_count",
+        }
+
+        for key, column in fields_to_check.items():
+            value = data.get(key)
+            if value:  
+                update_fields.append(f"{column} = %s")
+                update_values.append(value)
+
+        if not update_fields:
+            return JsonResponse({"message": "No valid fields provided for update."}, status=200)
+
+        update_values.append(book_id)
+
+        update_query = "UPDATE bookrec_bookrec SET " + ", ".join(update_fields) + " WHERE book_id = %s"
+
+        with connection.cursor() as cursor:
+            cursor.execute(update_query, update_values)
+
+        return JsonResponse({"status": "success", "updated_fields": update_fields})
