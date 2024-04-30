@@ -30,15 +30,15 @@ const AddBookForm = ({ onBookAdded }) => {
 
     try {
       const response = await axios.post("/api/BookRec/add/", bookData);
-      if (response.status === 201) { // Check if the book was successfully added
-        setModalTitle("Book Added"); // Set modal title
-        setModalMessage(`"${bookData.title}" was successfully added.`); // Set modal message
-        toggleModal(); // Open the modal
+      if (response.status === 201) { 
+        setModalTitle("Book Added"); 
+        setModalMessage(`"${bookData.title}" was successfully added.`); 
+        toggleModal(); 
         setTimeout(() => {
-          window.location.reload(); // Refresh the page
+          window.location.reload(); 
         }, 2000);
         if (onBookAdded) {
-          onBookAdded(); // Trigger the callback if provided
+          onBookAdded(); 
         }
       } else {
         setModalTitle("Add Book Failed");
@@ -63,7 +63,7 @@ const AddBookForm = ({ onBookAdded }) => {
           name="book_id"
           value={bookData.book_id}
           onChange={handleInputChange}
-          readOnly // Make the field read-only to prevent manual edits
+          readOnly
           placeholder="Book ID (auto-generated)"
         />
       </FormGroup>

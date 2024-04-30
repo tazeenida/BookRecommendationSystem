@@ -8,12 +8,12 @@ const BookSearchPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleModal = () => {
-    setIsModalOpen(!isModalOpen); // Toggle the modal state
+    setIsModalOpen(!isModalOpen); 
   };
 
   const handleSearchResults = (results) => {
     setSearchResults(results);
-    toggleModal(); // Open the modal when there are results
+    toggleModal(); 
   };
 
   return (

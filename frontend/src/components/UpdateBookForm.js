@@ -29,9 +29,9 @@ function UpdateBookForm({ onBookUpdated }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault(); 
     try {
-      const response = await axios.put("/api/BookRec/update/", bookData); // Correct endpoint
+      const response = await axios.put("/api/BookRec/update/", bookData);
       if (response.status === 200) {
         const bookTitle = bookData.title ? `"${bookData.title}" was successfully updated.` : "Update Successful.";
         setModalTitle("Book Updated"); 
@@ -62,7 +62,7 @@ function UpdateBookForm({ onBookUpdated }) {
           <Label>Book ID:</Label>
           <Input
             type="text"
-            name="book_id"  // Ensure this is consistent with the backend
+            name="book_id"
             value={bookData.book_id}
             onChange={handleChange}
             required

@@ -4,31 +4,30 @@ import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 import FeedbackModal from "./FeedbackModal";
 
 const DeleteBookForm = () => {
-  const [bookTitle, setBookTitle] = useState(""); // State to hold book title
-  const [bookAuthors, setBookAuthors] = useState(""); // State to hold book authors
+  const [bookTitle, setBookTitle] = useState(""); 
+  const [bookAuthors, setBookAuthors] = useState(""); 
   
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
-  const [modalTitle, setModalTitle] = useState(""); // Modal title
-  const [modalMessage, setModalMessage] = useState(""); // Modal message
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [modalTitle, setModalTitle] = useState(""); 
+  const [modalMessage, setModalMessage] = useState(""); 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form behavior
+    e.preventDefault(); 
 
     try {
       const response = await axios.delete("/api/BookRec/delete/", {
         data: { title: bookTitle, authors: bookAuthors },
       });
 
-      if (response.status === 200) { // Status 200 indicates successful deletion
-        setModalTitle("Book Deleted"); // Set modal title
-        setModalMessage(`"${bookTitle}" was successfully deleted.`); // Set modal message
-        toggleModal(); // Open the modal
+      if (response.status === 200) { 
+        setModalTitle("Book Deleted"); 
+        setModalMessage(`"${bookTitle}" was successfully deleted.`); 
+        toggleModal(); 
         
-        // Reload the page after a delay to reflect the changes
         setTimeout(() => {
           window.location.reload(); 
-        }, 2000); // Wait 2 seconds to let the user see the modal
+        }, 2000); 
       } else {
         setModalTitle("Delete Book Failed");
         setModalMessage("Failed to delete the book.");
@@ -51,7 +50,7 @@ const DeleteBookForm = () => {
             type="text"
             name="title"
             value={bookTitle}
-            onChange={(e) => setBookTitle(e.target.value)} // Set book title
+            onChange={(e) => setBookTitle(e.target.value)} 
             placeholder="Enter book title"
           />
         </FormGroup>
@@ -61,7 +60,7 @@ const DeleteBookForm = () => {
             type="text"
             name="authors"
             value={bookAuthors}
-            onChange={(e) => setBookAuthors(e.target.value)} // Set book authors
+            onChange={(e) => setBookAuthors(e.target.value)} 
             placeholder="Enter book authors"
           />
         </FormGroup>

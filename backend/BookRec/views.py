@@ -59,7 +59,7 @@ class BookRecView(viewsets.ViewSet):
             
         return JsonResponse({'message': 'Book deleted successfully'}, status=200)
 
-    @action(detail=False, methods=['get'])  # Filtering endpoint
+    @action(detail=False, methods=['get']) 
     def filter(self, request):
         query = "SELECT * FROM bookrec_bookrec WHERE 1=1"
         params = []
@@ -86,7 +86,6 @@ class BookRecView(viewsets.ViewSet):
         'authors': 'authors',
             }
 
-            # Loop through and add filters
         for field, column in fields.items():
             value = request.query_params.get(field)
             if value:
@@ -103,16 +102,14 @@ class BookRecView(viewsets.ViewSet):
         
     def update(self, request, pk=None):
         data = json.loads(request.body)
-        book_id = data.get("book_id")  # Ensure this is the correct identifier
+        book_id = data.get("book_id")  
 
         if not book_id:
             return JsonResponse({"error": "Book ID is required for update."}, status=400)
 
-        # Update only fields that are provided and not empty
         update_fields = []
         update_values = []
 
-        # Add fields to update if they're present in the request data and not empty
         fields_to_check = {
             "title": "title",
             "authors": "authors",
@@ -126,20 +123,17 @@ class BookRecView(viewsets.ViewSet):
 
         for key, column in fields_to_check.items():
             value = data.get(key)
-            if value:  # Only add to update if the value is not None or empty
+            if value:  
                 update_fields.append(f"{column} = %s")
                 update_values.append(value)
 
         if not update_fields:
             return JsonResponse({"message": "No valid fields provided for update."}, status=200)
 
-        # Add book_id to the end of update_values
         update_values.append(book_id)
 
-        # Construct the UPDATE query with only the fields to update
         update_query = "UPDATE bookrec_bookrec SET " + ", ".join(update_fields) + " WHERE book_id = %s"
 
-        # Execute the query
         with connection.cursor() as cursor:
             cursor.execute(update_query, update_values)
 

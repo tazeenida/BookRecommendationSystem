@@ -14,23 +14,23 @@ import {
   ListGroup,
   ListGroupItem,
 } from "reactstrap";
-import classnames from "classnames"; // Corrected the import
+import classnames from "classnames";  
 import BookModal from "./components/BookModal";
-import AddBookForm from "./components/AddBookForm"; // Correct import
+import AddBookForm from "./components/AddBookForm"; 
 import DeleteBookForm from "./components/DeleteBookForm";
 import BookSearchPage from "./components/BookSearchPage";
 import UpdateBookForm from "./components/UpdateBookForm";
-import "./App.css"; // Correct path
+import "./App.css";
 
 const App = () => {
-  const [bookList, setBookList] = useState([]); // List of books
-  const [activeItem, setActiveItem] = useState({}); // Active book
-  const [modal, setModal] = useState(false); // Modal state
-  const [isLoading, setIsLoading] = useState(false); // Loading state
-  const [error, setError] = useState(null); // Error handling
-  const [activeTab, setActiveTab] = useState("1"); // Active tab
+  const [bookList, setBookList] = useState([]); 
+  const [activeItem, setActiveItem] = useState({}); 
+  const [modal, setModal] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false); 
+  const [error, setError] = useState(null); 
+  const [activeTab, setActiveTab] = useState("1"); 
 
-  const fetchBooks = async () => { // Function to fetch books
+  const fetchBooks = async () => {
     setIsLoading(true);
     setError(null);
 

@@ -29,7 +29,7 @@ const SearchBookForm = ({ onSearchResults }) => {
       });
 
       if (response.status === 200) {
-        onSearchResults(response.data); // Pass results to the parent component
+        onSearchResults(response.data); 
       }
     } catch (error) {
       console.error("Error fetching filtered books:", error);
@@ -38,7 +38,6 @@ const SearchBookForm = ({ onSearchResults }) => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      {/* Include fields for each filterable attribute */}
       <FormGroup>
         <Label for="book_id">Book ID</Label>
         <Input
