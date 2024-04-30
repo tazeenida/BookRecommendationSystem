@@ -1,7 +1,8 @@
 from django.db import models
+from uuid import uuid4
 
 class BookRec(models.Model):
-    book_id = models.TextField(unique=True)
+    book_id = models.UUIDField(default=uuid4, editable=False, unique=True, primary_key=True)
     title = models.TextField(unique=True)
     year = models.IntegerField(default=0)
     pages = models.IntegerField(default=0)

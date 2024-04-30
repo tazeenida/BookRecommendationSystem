@@ -23,14 +23,9 @@ const AddBookForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!bookData.title || !bookData.authors) {
-      console.error("Title and Authors are required.");
-      return; 
-    }
-
+  
     try {
-      const response = await axios.post("/api/BookRec/add/", bookData);
+      const response = await axios.post("/api/BookRec/add/", bookData);  // Ensure book_id is in bookData
       console.log("Book added:", response.data.message);
     } catch (error) {
       console.error("Error adding book:", error.response?.data);

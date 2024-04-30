@@ -6,7 +6,8 @@ from rest_framework import status
 from .serializers import BookRecSerializer
 from .models import BookRec
 from django.http import JsonResponse
-
+from rest_framework.decorators import action
+from uuid import uuid4
 
 class BookRecView(viewsets.ViewSet):
     def list(self, request):
@@ -20,6 +21,7 @@ class BookRecView(viewsets.ViewSet):
 
     @action(detail=False, methods=['post'])
     def add(self, request):
+        book_id = request.data.get('book_id', uuid4())
         title = request.data.get('title')
         year = request.data.get('year')
         pages = request.data.get('pages')
@@ -31,8 +33,8 @@ class BookRecView(viewsets.ViewSet):
 
         with connection.cursor() as cursor:
             cursor.execute(
-                "INSERT INTO bookrec_bookrec (title, year, pages, description, genres, average_rating, ratings_count, authors) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-                [title, year, pages, description, genres, average_rating, ratings_count, authors]
+                "INSERT INTO bookrec_bookrec (book_id, title, year, pages, description, genres, average_rating, ratings_count, authors) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                [book_id, title, year, pages, description, genres, average_rating, ratings_count, authors]
             )
 
         return JsonResponse({'message': 'Book added successfully'}, status=201)
