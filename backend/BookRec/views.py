@@ -103,30 +103,44 @@ class BookRecView(viewsets.ViewSet):
         
     def update(self, request, pk=None):
         data = json.loads(request.body)
-        book_id = data.get('book_id')  # Ensure this is the correct identifier
+        book_id = data.get("book_id")  # Ensure this is the correct identifier
 
         if not book_id:
             return JsonResponse({"error": "Book ID is required for update."}, status=400)
 
+        # Update only fields that are provided and not empty
         update_fields = []
         update_values = []
 
-        # Add fields to update if present in the request data
-        if 'title' in data:
-            update_fields.append("title = %s")
-            update_values.append(data['title'])
+        # Add fields to update if they're present in the request data and not empty
+        fields_to_check = {
+            "title": "title",
+            "authors": "authors",
+            "year": "year",
+            "pages": "pages",
+            "description": "description",
+            "genres": "genres",
+            "average_rating": "average_rating",
+            "ratings_count": "ratings_count",
+        }
 
-        if 'authors' in data:
-            update_fields.append("authors = %s")
-            update_values.append(data['authors'])
+        for key, column in fields_to_check.items():
+            value = data.get(key)
+            if value:  # Only add to update if the value is not None or empty
+                update_fields.append(f"{column} = %s")
+                update_values.append(value)
 
         if not update_fields:
-            return JsonResponse({"message": "No fields provided for update."}, status=200)
+            return JsonResponse({"message": "No valid fields provided for update."}, status=200)
 
-        update_query = "UPDATE bookrec_bookrec SET " + ", ".join(update_fields) + " WHERE book_id = %s"
+        # Add book_id to the end of update_values
         update_values.append(book_id)
 
+        # Construct the UPDATE query with only the fields to update
+        update_query = "UPDATE bookrec_bookrec SET " + ", ".join(update_fields) + " WHERE book_id = %s"
+
+        # Execute the query
         with connection.cursor() as cursor:
-            cursor.execute(update_query, update_values)  # Ensure correct application of updates
+            cursor.execute(update_query, update_values)
 
         return JsonResponse({"status": "success", "updated_fields": update_fields})

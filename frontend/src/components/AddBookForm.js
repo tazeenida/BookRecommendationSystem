@@ -54,6 +54,7 @@ const AddBookForm = ({ onBookAdded }) => {
   };
   return (
     <>
+    <h2>Add Books</h2>
     <Form onSubmit={handleSubmit}>
       <FormGroup>
         <Label for="bookId">Book ID</Label>

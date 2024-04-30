@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
-
+import FeedbackModal from "./FeedbackModal"; 
 function UpdateBookForm({ onBookUpdated }) {
   const [bookData, setBookData] = useState({
     book_id: '', 
@@ -33,16 +33,14 @@ function UpdateBookForm({ onBookUpdated }) {
     try {
       const response = await axios.put("/api/BookRec/update/", bookData); // Correct endpoint
       if (response.status === 200) {
-        // Handle successful update
-        setModalTitle("Book Updated");
-        setModalMessage(`"${bookData.title}" was successfully updated.`);
+        const bookTitle = bookData.title ? `"${bookData.title}" was successfully updated.` : "Update Successful.";
+        setModalTitle("Book Updated"); 
+        setModalMessage(bookTitle); 
         toggleModal();
         setTimeout(() => {
-          if (onBookUpdated) {
-            onBookUpdated(); // Trigger callback to refresh the book list
-          }
+          window.location.reload();
         }, 2000);
-      } else {
+      }else {
         setModalTitle("Update Failed");
         setModalMessage("Failed to update the book.");
         toggleModal();
@@ -79,8 +77,90 @@ function UpdateBookForm({ onBookUpdated }) {
             onChange={handleChange}
           />
         </FormGroup>
-        <Button type="submit">Update</Button>
-      </Form>
+        <FormGroup>
+        <Label for="bookAuthor">Authors</Label>
+        <Input
+          type="text"
+          name="authors"
+          value={bookData.authors}
+          onChange={handleChange}
+          placeholder="Enter authors"
+        />
+      </FormGroup>
+
+      <FormGroup>
+        <Label for="bookYear">Year</Label>
+        <Input
+          type="number"
+          name="year"
+          value={bookData.year}
+          onChange={handleChange}
+          placeholder="Enter book year"
+        />
+      </FormGroup>
+
+      <FormGroup>
+        <Label for="bookPages">Pages</Label>
+        <Input
+          type="number"
+          name="pages"
+          value={bookData.pages}
+          onChange={handleChange}
+          placeholder="Enter book pages"
+        />
+      </FormGroup>
+
+      <FormGroup>
+        <Label for="bookDescription">Description</Label>
+        <Input
+          type="text"
+          name="description"
+          value={bookData.description}
+          onChange={handleChange}
+          placeholder="Enter description"
+        />
+      </FormGroup>
+
+      <FormGroup>
+        <Label for="bookGenres">Genres</Label>
+        <Input
+          type="text"
+          name="genres"
+          value={bookData.genres}
+          onChange={handleChange}
+          placeholder="Enter genres"
+        />
+      </FormGroup>
+
+      <FormGroup>
+        <Label for="bookAvgRating">Average Rating</Label>
+        <Input
+          type="number"
+          name="average_rating"
+          value={bookData.average_rating}
+          onChange={handleChange}
+          placeholder="Enter average rating"
+        />
+      </FormGroup>
+
+      <FormGroup>
+        <Label for="bookRatingsCount">Ratings Count</Label>
+        <Input
+          type="number"
+          name="ratings_count"
+          value={bookData.ratings_count}
+          onChange={handleChange}
+          placeholder="Enter ratings count"
+        />
+      </FormGroup>
+        <Button color="primary" type="submit">Update</Button>
+          </Form>
+          <FeedbackModal
+        isOpen={isModalOpen}
+        toggle={toggleModal}
+        title={modalTitle}
+        message={modalMessage}
+      />
     </div>
   );
 }

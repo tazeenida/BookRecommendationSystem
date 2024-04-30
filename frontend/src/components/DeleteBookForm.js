@@ -43,6 +43,7 @@ const DeleteBookForm = () => {
 
   return (
     <>
+      <h2>Delete Books</h2>
       <Form onSubmit={handleSubmit}>
         <FormGroup>
           <Label for="deleteTitle">Book Title</Label>

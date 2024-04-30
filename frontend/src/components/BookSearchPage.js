@@ -18,7 +18,7 @@ const BookSearchPage = () => {
 
   return (
     <div>
-      <h2>Search for Books</h2>
+      <h2>Search Books</h2>
       <SearchBookForm onSearchResults={handleSearchResults} />
       
       <Modal isOpen={isModalOpen} toggle={toggleModal}>
