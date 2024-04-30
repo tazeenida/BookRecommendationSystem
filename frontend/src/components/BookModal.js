@@ -7,6 +7,9 @@ const BookModal = ({ activeItem, toggle, isOpen }) => {
         Book Details
       </ModalHeader>
       <ModalBody>
+      <div className="mb-3">
+          <strong>Book ID:</strong> {activeItem.book_id}
+        </div>
         <div className="mb-3">
           <strong>Title:</strong> {activeItem.title}
         </div>

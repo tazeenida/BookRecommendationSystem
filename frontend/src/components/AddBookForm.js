@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 import { v4 as uuidv4 } from 'uuid'; 
+import FeedbackModal from "./FeedbackModal"; 
 
-const AddBookForm = () => {
+const AddBookForm = ({ onBookAdded }) => {
   const [bookData, setBookData] = useState({
     book_id: uuidv4(),
     title: "",
@@ -15,7 +16,10 @@ const AddBookForm = () => {
     ratings_count: "",
     authors: "",
   });
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setBookData({ ...bookData, [name]: value });
@@ -23,16 +27,33 @@ const AddBookForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
-      const response = await axios.post("/api/BookRec/add/", bookData);  // Ensure book_id is in bookData
-      console.log("Book added:", response.data.message);
+      const response = await axios.post("/api/BookRec/add/", bookData);
+      if (response.status === 201) { // Check if the book was successfully added
+        setModalTitle("Book Added"); // Set modal title
+        setModalMessage(`"${bookData.title}" was successfully added.`); // Set modal message
+        toggleModal(); // Open the modal
+        setTimeout(() => {
+          window.location.reload(); // Refresh the page
+        }, 2000);
+        if (onBookAdded) {
+          onBookAdded(); // Trigger the callback if provided
+        }
+      } else {
+        setModalTitle("Add Book Failed");
+        setModalMessage("Failed to add the book.");
+        toggleModal();
+      }
     } catch (error) {
+      setModalTitle("Error Adding Book");
+      setModalMessage("An error occurred while adding the book. Please try again.");
+      toggleModal();
       console.error("Error adding book:", error.response?.data);
     }
   };
-
   return (
+    <>
     <Form onSubmit={handleSubmit}>
       <FormGroup>
         <Label for="bookId">Book ID</Label>
@@ -137,6 +158,13 @@ const AddBookForm = () => {
         Add Book
       </Button>
     </Form>
+    <FeedbackModal
+    isOpen={isModalOpen}
+    toggle={toggleModal}
+    title={modalTitle}
+    message={modalMessage}
+  />
+  </>
   );
 };
 

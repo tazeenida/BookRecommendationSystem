@@ -17,6 +17,7 @@ import {
 import classnames from "classnames"; // Corrected the import
 import BookModal from "./components/BookModal";
 import AddBookForm from "./components/AddBookForm"; // Correct import
+import DeleteBookForm from "./components/DeleteBookForm";
 import "./App.css"; // Correct path
 
 const App = () => {
@@ -45,40 +46,6 @@ const App = () => {
   useEffect(() => {
     fetchBooks(); // Fetch books on component mount
   }, []);
-
-  const addBook = async (bookData) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await axios.post("/api/BookRec/add/", bookData);
-      console.log("Book added:", response.data.message);
-      fetchBooks(); // Refresh the book list
-    } catch (error) {
-      console.error("Error adding book:", error);
-      setError("Error adding book");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const deleteBook = async (bookTitle, bookAuthors) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await axios.delete("/api/BookRec/delete/", {
-        data: { title: bookTitle, authors: bookAuthors },
-      });
-      console.log("Book deleted:", response.data.message);
-      fetchBooks(); // Refresh the book list after deleting
-    } catch (error) {
-      console.error("Error deleting book:", error);
-      setError("Error deleting book");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleBookClick = (book) => {
     setActiveItem(book);
@@ -145,7 +112,7 @@ const App = () => {
         </TabPane>
 
         <TabPane tabId="2">
-        <AddBookForm onAddBook={addBook} />
+        <AddBookForm onBookAdded={fetchBooks} />
         </TabPane>
         <TabPane tabId="3">
           <Form>
@@ -162,26 +129,7 @@ const App = () => {
         </TabPane>
       
       <TabPane tabId="4">
-        <Form onSubmit={(e) => e.preventDefault()}>
-            <FormGroup>
-              <Label for="deleteTitle">Delete Book Title</Label>
-              <Input type="text" id="deleteTitle" placeholder="Enter book title to delete" />
-            </FormGroup>
-            <FormGroup>
-              <Label for="deleteAuthors">Delete Authors</Label>
-              <Input type="text" id="deleteAuthors" placeholder="Enter authors to delete" />
-            </FormGroup>
-            <Button
-              color="primary"
-              onClick={() => {
-                const bookTitle = document.getElementById("deleteTitle").value;
-                const bookAuthors = document.getElementById("deleteAuthors").value;
-                deleteBook(bookTitle, bookAuthors);
-              }}
-            >
-               Delete Book
-            </Button>
-          </Form>
+      <DeleteBookForm/>
         </TabPane>
         </TabContent>
       <BookModal
