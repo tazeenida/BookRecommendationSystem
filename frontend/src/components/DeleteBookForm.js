@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 import FeedbackModal from "./FeedbackModal";
 
+const backendUrl = 'https://bookrecommendationsystem-1.onrender.com';
+
 const DeleteBookForm = () => {
   const [bookTitle, setBookTitle] = useState(""); 
   const [bookAuthors, setBookAuthors] = useState(""); 
@@ -16,7 +18,7 @@ const DeleteBookForm = () => {
     e.preventDefault(); 
 
     try {
-      const response = await axios.delete("/api/BookRec/delete/", {
+      const response = await axios.delete(`${backendUrl}/api/BookRec/delete/`, {
         data: { title: bookTitle, authors: bookAuthors },
       });
 

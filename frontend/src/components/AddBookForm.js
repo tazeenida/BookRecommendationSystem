@@ -4,6 +4,8 @@ import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 import { v4 as uuidv4 } from 'uuid'; 
 import FeedbackModal from "./FeedbackModal"; 
 
+const backendUrl = 'https://bookrecommendationsystem-1.onrender.com';
+
 const AddBookForm = ({ onBookAdded }) => {
   const [bookData, setBookData] = useState({
     book_id: uuidv4(),
@@ -29,7 +31,7 @@ const AddBookForm = ({ onBookAdded }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/api/BookRec/add/", bookData);
+      const response = await axios.post(`${backendUrl}/api/BookRec/add/`, bookData);
       if (response.status === 201) { 
         setModalTitle("Book Added"); 
         setModalMessage(`"${bookData.title}" was successfully added.`); 

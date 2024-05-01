@@ -20,6 +20,8 @@ function UpdateBookForm({ onBookUpdated }) {
   const [modalMessage, setModalMessage] = useState("");
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
+  const backendUrl = 'https://bookrecommendationsystem-1.onrender.com';
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setBookData((prevData) => ({
@@ -31,7 +33,7 @@ function UpdateBookForm({ onBookUpdated }) {
   const handleSubmit = async (e) => {
     e.preventDefault(); 
     try {
-      const response = await axios.put("/api/BookRec/update/", bookData);
+      const response = await axios.put(`${backendUrl}/api/BookRec/update/`, bookData);
       if (response.status === 200) {
         const bookTitle = bookData.title ? `"${bookData.title}" was successfully updated.` : "Update Successful.";
         setModalTitle("Book Updated"); 

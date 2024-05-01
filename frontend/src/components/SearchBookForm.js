@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 
+const backendUrl = 'https://bookrecommendationsystem-1.onrender.com';
+
 const initialFilters = {
   book_id: "",
   title: "",
@@ -40,7 +42,7 @@ const SearchBookForm = ({ onSearchResults }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.get("/api/BookRec/filter/", {
+      const response = await axios.get(`${backendUrl}/api/BookRec/filter/`, {
         params: filters,
       });
 
