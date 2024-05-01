@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-t-)ria0)x@55vk612e)3u0qi%&4fs_1063f@g+36mxbgjd7ol7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://bookrecommendationsystem-1.onrender.com']
 
 
 # Application definition
@@ -54,6 +54,25 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'backend.urls'
+
+CORS_ORIGIN_ALLOW_ALL = False
+
+CSRF_TRUSTED_ORIGINS = ['https://bookrecommendationsystem-y5j1.onrender.com']
+
+CORS_ALLOWED_ORIGINS = [
+    'https://bookrecommendationsystem-y5j1.onrender.com',
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ORIGIN_WHITELIST = [
+     'https://bookrecommendationsystem-y5j1.onrender.com'
+]
+
+
+CORS_ALLOW_METHODS = [
+    'GET', 'POST', 'PUT', 'DELETE', 'OPTIONS',
+]
 
 TEMPLATES = [
     {
