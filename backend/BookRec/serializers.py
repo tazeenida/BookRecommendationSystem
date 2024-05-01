@@ -1,19 +1,25 @@
 from rest_framework import serializers
-from .models import BookRec
-from rest_framework import viewsets
-from rest_framework.decorators import action
+from BookRec.models import Books, Ratings
 from uuid import uuid4
 
-class BookRecSerializer(serializers.ModelSerializer):
+class RatingsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BookRec
-        fields = '__all__'
+        model = Ratings
+        fields = ['rating_id', 'book', 'average_rating', 'ratings_count']
 
-class BookRecView(viewsets.ViewSet):
-    @action(detail=False, methods=['post'])
-    def add(self, request):
-        serializer = BookRecSerializer(data=request.data)
-        if serializer.is_valid(): 
-            serializer.save()  
-            return Response({"message": "Book added successfully"}, status=201)
-        return Response(serializer.errors, status=400)  # Return validation errors
+class BooksSerializer(serializers.ModelSerializer):
+    ratings = RatingsSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Books
+        fields = [
+            'book_id', 
+            'title', 
+            'year', 
+            'pages', 
+            'description', 
+            'genres', 
+            'authors', 
+            'ratings' 
+        ]
+        read_only_fields = ['book_id']

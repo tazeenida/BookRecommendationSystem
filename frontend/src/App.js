@@ -22,6 +22,8 @@ import BookSearchPage from "./components/BookSearchPage";
 import UpdateBookForm from "./components/UpdateBookForm";
 import "./App.css";
 
+const backendUrl = 'https://bookrecommendationsystem-1.onrender.com';
+
 const App = () => {
   const [bookList, setBookList] = useState([]); 
   const [activeItem, setActiveItem] = useState({}); 
@@ -35,7 +37,7 @@ const App = () => {
     setError(null);
 
     try {
-      const response = await axios.get("/api/BookRec/");
+      const response = await axios.get(`${backendUrl}/api/BookRec/`);
       setBookList(response.data);
     } catch (error) {
       console.error("Error fetching books:", error);
