@@ -37,7 +37,7 @@ const App = () => {
     setError(null);
 
     try {
-      const response = await axios.get(`${backendUrl}/api/BookRec`);
+      const response = await axios.get(`${backendUrl}/api/BookRec/`);
       setBookList(response.data);
     } catch (error) {
       console.error("Error fetching books:", error);
