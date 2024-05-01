@@ -57,16 +57,16 @@ ROOT_URLCONF = 'backend.urls'
 
 CORS_ORIGIN_ALLOW_ALL = False
 
-CSRF_TRUSTED_ORIGINS = ['https://bookrecommendationsystem-y5j1.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://bookrecommendationsystem-qf5o.onrender.com']
 
 CORS_ALLOWED_ORIGINS = [
-    'https://bookrecommendationsystem-y5j1.onrender.com',
+    'https://bookrecommendationsystem-qf5o.onrender.com',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = [
-     'https://bookrecommendationsystem-y5j1.onrender.com'
+     'https://bookrecommendationsystem-qf5o.onrender.com'
 ]
 
 
