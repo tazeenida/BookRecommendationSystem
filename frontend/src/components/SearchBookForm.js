@@ -2,6 +2,20 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 
+const initialFilters = {
+  book_id: "",
+  title: "",
+  year: "",
+  pages: "",
+  description: "",
+  genres: "",
+  average_rating: "",
+  ratings_count: "",
+  authors: "",
+  average_rating_min: "",
+  average_rating_max: "",
+};
+
 const SearchBookForm = ({ onSearchResults }) => {
   const [filters, setFilters] = useState({
     book_id: "",
@@ -19,7 +33,9 @@ const SearchBookForm = ({ onSearchResults }) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
   };
-
+  const handleClear = () => {
+    setFilters(initialFilters); 
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -127,6 +143,9 @@ const SearchBookForm = ({ onSearchResults }) => {
     
       <Button color="primary" type="submit">
         Search
+      </Button>
+      <Button style={{ marginLeft: "10px" }} color="primary" type="button" onClick={handleClear}>
+        Clear Search
       </Button>
     </Form>
   );
